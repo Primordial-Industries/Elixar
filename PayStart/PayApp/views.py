@@ -149,8 +149,6 @@ def create_order(request):
         phone = std.phone
         course = std.courseapp
         crsname = course.name
-        logout(request)
-        us.delete()
         context = {}
         # if request.method == 'POST':
             # print("INSIDE Create Order!!!")
@@ -198,6 +196,8 @@ def payment_status(request):
     user = request.user
     mail = user.email
     std = Student.objects.get(email=mail)
+    logout(request)
+        us.delete()
     course = std.courseapp.name
     if course == 'Conquere':
         courseown = ConquereSub.objects.get(user = std)
