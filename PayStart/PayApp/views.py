@@ -27,45 +27,54 @@ def Trial(request):                                           # view for free tr
         course = Course.objects.get(name= 'Free Trial')
         try:
             std = Student.objects.get(email= mail, phone=phnum)
+            try:
+                us = User.objects.get(username=mail)
+            except User.DoesNotExist:
+                us = User(username=mail, email=mail)
+                us.set_password(phnum)
+                us.save()
         except Student.DoesNotExist:
             std = Student(name=name,email=mail,phone=phnum,school=school,courseapp=course)
             us = User(username=mail, email=mail)                     # Session Management
             us.set_password(phnum)
             us.save()
-            std.active_key = random.randint(100000, 999999)         # generating OTP
-            keya = std.active_key    
-            std.save()          # creating student
-            # sending email
-            send_mail('Your OTP is {}'.format(keya),message="", from_email='p.abhijeetp94@gmail.com', recipient_list= [mail], fail_silently= False)
-            val = authenticate(username = mail, password = phnum)
-            login(request, val)
+        std.active_key = random.randint(100000, 999999)         # generating OTP
+        keya = std.active_key    
+        std.save()          # creating student
+        # sending email
+        send_mail('Your OTP is {}'.format(keya),message="", from_email='p.abhijeetp94@gmail.com', recipient_list= [mail], fail_silently= False)
+        val = authenticate(username = mail, password = phnum)
+        login(request, val)
 
         datasend = {'email': mail, 'name':name, 'phone':phnum}
         return redirect('PayApp:Verify')
     return render(request, 'PayApp/loginTrial.html')
 
 def Verify(request):
-    mail = request.user
-    emai = mail.email
-    stda = Student.objects.get(email = mail)
-    phone = stda.phone
-    msg = {}
-    if request.method == "POST":
-        iOTP = request.POST.get('OTP', '')
-        print(stda.active_key)
-        print(iOTP)
-        if int(iOTP) == int(stda.active_key):
-            try:
-                stdf = FreeTrialSub.objects.get(user=stda)
-            except FreeTrialSub.DoesNotExist:
-                stdf = FreeTrialSub(user=stda, phone = phone)
-                stdf.save()
-            stda.verif = True
-            return redirect("PayApp:Calender")
-        else:
-            print("Some Error")
-            msg = messages.info(request, message='Invalid OTP Try Again!!')
-    return render(request, 'PayApp/verify.html', msg)
+    if request.user.is_authenticated:
+        mail = request.user
+        emai = mail.email
+        stda = Student.objects.get(email = mail)
+        phone = stda.phone
+        msg = {}
+        if request.method == "POST":
+            iOTP = request.POST.get('OTP', '')
+            print(stda.active_key)
+            print(iOTP)
+            if int(iOTP) == int(stda.active_key):
+                try:
+                    stdf = FreeTrialSub.objects.get(user=stda)
+                except FreeTrialSub.DoesNotExist:
+                    stdf = FreeTrialSub(user=stda, phone = phone)
+                    stdf.save()
+                stda.verif = True
+                return redirect("PayApp:Calender")
+            else:
+                print("Some Error")
+                msg = messages.info(request, message='Invalid OTP Try Again!!')
+        return render(request, 'PayApp/verify.html', msg)
+    else:
+        return redirect('PayApp:Trial')
 
 def PaymentLogin(request, course):
     crs = Course.objects.get(name=course)
@@ -81,18 +90,23 @@ def PaymentLogin(request, course):
         # course = Course.objects.get(name= 'Free Trial')
         try:
             std = Student.objects.get(email= mail,phone = phnum)
+            try:
+                us = User.objects.get(username=mail)
+            except User.DoesNotExist:
+                us = User(username=mail, email=mail)
+                us.set_password(phnum)
+                us.save()
         except Student.DoesNotExist:
             std = Student(name=name,email=mail,phone=phnum,school=school,courseapp=crs)
             us = User(username=mail, email=mail)
-            
             us.set_password(phnum)
             us.save()
-            std.active_key = random.randint(100000, 999999)
-            keya = std.active_key
-            std.save()
-            send_mail('Your OTP for {} course is {}'.format(course, keya),message="", from_email='p.abhijeetp94@gmail.com', recipient_list= [mail], fail_silently= False)
-            val = authenticate(username = mail, password = phnum)
-            login(request, val)
+        std.active_key = random.randint(100000, 999999)
+        keya = std.active_key
+        std.save()
+        send_mail('Your OTP for {} course is {}'.format(course, keya),message="", from_email='p.abhijeetp94@gmail.com', recipient_list= [mail], fail_silently= False)
+        val = authenticate(username = mail, password = phnum)
+        login(request, val)
 
         datasend = {'email': mail, 'name':name, 'phone':phnum}
         return redirect('PayApp:verifyPay')
@@ -197,7 +211,7 @@ def payment_status(request):
     mail = user.email
     std = Student.objects.get(email=mail)
     logout(request)
-    us.delete()
+    user.delete()
     course = std.courseapp.name
     if course == 'Conquere':
         courseown = ConquereSub.objects.get(user = std)
@@ -223,3 +237,18 @@ def payment_status(request):
     except:
         return render(request, 'PayApp/order_summary.html', {'status': 'Payment Faliure!!!'})
 
+def reOTPpay(request):
+    us = request.user
+    mail = us.email
+    std = Student.objects.get(email=mail)
+    std.active_key = random.randint(100000,999999)
+    send_mail('OTP Validation',html_message='Your OTP for {} course is <b>{}</b>'.format(course, keya), from_email='p.abhijeetp94@gmail.com', recipient_list= [mail], fail_silently= False)
+    return redirect('PayApp:verifyPay')
+
+def reOTPtrial(request):
+    us = request.user
+    mail = us.email
+    std = Student.objects.get(email=mail)
+    std.active_key = random.randint(100000,999999)
+    send_mail('OTP Validation',html_message='Your OTP for {} course is <b>{}</b>'.format(course, keya), from_email='p.abhijeetp94@gmail.com', recipient_list= [mail], fail_silently= False)
+    return redirect('PayApp:Verify')

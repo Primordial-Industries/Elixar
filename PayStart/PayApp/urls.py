@@ -13,4 +13,6 @@ urlpatterns = [
     path('Calender/', views.Calender, name = "Calender"),
     path('confirm_order', views.create_order, name = 'create_order'),
     path('payment_status', views.payment_status, name = 'payment_status'),
+    path('resend_otp/', views.reOTPtrial, name = 'reOTPtrial'),
+    path('resend_otp_pay/', views.reOTPpay, name = 'reOTPpay'),
 ]
