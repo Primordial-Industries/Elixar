@@ -15,4 +15,6 @@ urlpatterns = [
     path('payment_status', views.payment_status, name = 'payment_status'),
     path('resend_otp/', views.reOTPtrial, name = 'reOTPtrial'),
     path('resend_otp_pay/', views.reOTPpay, name = 'reOTPpay'),
+    path('FreeTrial/verify/', views.direct1, name = 'direct1'),
+    path('FreeTrial/verify/calender/', views.direct2, name = 'direct2'),
 ]

@@ -1,105 +1,66 @@
-<!DOCTYPE html>
+<!doctype html>
+{% load static %}
 <html lang="en">
-	{% load static %}
-<head>
-	<title>Verify - Kalam Labs</title>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1">
-<!--===============================================================================================-->	
-	<link rel="icon" type="image/png" href="{% static "PayApp/images/icons/favicon.ico" %}"/>
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static "PayApp/vendor/bootstrap/css/bootstrap.min.css" %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static "PayApp/fonts/font-awesome-4.7.0/css/font-awesome.min.css" %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static "PayApp/fonts/Linearicons-Free-v1.0.0/icon-font.min.css" %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static "PayApp/vendor/animate/animate.css" %}">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="{% static "PayApp/vendor/css-hamburgers/hamburgers.min.css" %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static "PayApp/vendor/animsition/css/animsition.min.css" %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static "PayApp/vendor/select2/select2.min.css" %}">
-<!--===============================================================================================-->	
-	<link rel="stylesheet" type="text/css" href="{% static "PayApp/vendor/daterangepicker/daterangepicker.css" %}">
-<!--===============================================================================================-->
-	<link rel="stylesheet" type="text/css" href="{% static "PayApp/util.css" %}">
-	<link rel="stylesheet" type="text/css" href="{% static "PayApp/loginTrial.css" %}">
-<!--===============================================================================================-->
-</head>
-<body>
-	{% for message in msg %}
-	<div class="alert alert-danger alert-dismissible fade show" role="alert">
-		<strong>{{message}}</strong>
-		<button type="button" class="close" data-dismiss="alert" aria-label="Close">
-		  <span aria-hidden="true">&times;</span>
-		</button>
-	  </div>
-	{% endfor %}
-	<div class="limiter">
-		<div class="container-login100" style="background-image: url('{% static "PayApp/images/bg-01.jpg" %}');">
-			<div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
-				<form class="login100-form validate-form flex-sb flex-w" method="POST"> {% csrf_token %}
-					<input type="hidden" name="OTPval" value="{{OTP}}">
-					<input type="hidden" name="MailVal" value="{{mail}}">
-                    <h3 class="login100-form-title">Verify The OTP</h3>
-                    <br>
-					<div class="wrap-input100 validate-input" data-validate = "number is required" >
-						<input class="input100" type="OTP" name="OTP" placeholder="Enter OTP(single attempt)">
-						<span class="focus-input100"></span>
-                    </div>
-                    <div class="container-login100-form-btn m-t-17">
-						<button class="login100-form-btn" type="submit">Verify
-							<!-- <a href="../Calender/" style="color: aliceblue;" style="font: 200px;">Verify</a> -->
-						</button>
-                    </div>
-                    <div class="container-login100-form-btn text-center">
-						<a href="#">Refresh the page to recieve OTP Again</a>
-                    </div>
-                </form>
-                <button class="login100-form-btn">
-					<a href="../Calender/" style="color: aliceblue;" style="font: 200px;">Get Link temporary for abhijeet</a>
-				</button>
-			</div>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="SMP, MNNITA">
+    <meta name="generator" content="Jekyll v4.0.1">
+    <title>Verify - Kalam Labs</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/sign-in/">
+<link href="{% static "PayApp/assets/dist/css/bootstrap.css" %}" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <link href="{% static "PayApp/loginTrial.css" %}" rel="stylesheet">
+  </head>
+  <body>
+	<div class="container demo">
+		<div class="content">
+		   <div id="large-header" class="large-header">
+			  <canvas id="demo-canvas"></canvas>
+			  <h1 class="main-title"><span class="thin"></span> </h1>
+		   </div>
 		</div>
-	</div>
-	
-
-	<div id="dropDownSelect1"></div>
-	
-<!--===============================================================================================-->
-	<script src="{% static "PayApp/vendor/jquery/jquery-3.2.1.min.js" %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static "PayApp/vendor/animsition/js/animsition.min.js" %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static "PayApp/vendor/bootstrap/js/popper.js" %}"></script>
-	<script src="{% static "PayApp/vendor/bootstrap/js/bootstrap.min.js" %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static "PayApp/vendor/select2/select2.min.js" %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static "PayApp/vendor/daterangepicker/moment.min.js" %}"></script>
-	<script src="{% static "PayApp/vendor/daterangepicker/daterangepicker.js" %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static "PayApp/vendor/countdowntime/countdowntime.js" %}"></script>
-<!--===============================================================================================-->
-	<script src="{% static "PayApp/js/main.js" %}"></script>
-	<!-- <script>
-		function myFunction() {
-			var x, text;
-			otp = {{OTP}}
-			// Get the value of the input field with id="numb"
-			x = document.getElementById("OTP").value;
-
-			// If x is Not a Number or less than one or greater than 10
-			if (isNaN(x) || x != ) {
-				text = "Input not valid";
-			} else {
-				text = "Input OK";
-			}
-			document.getElementById("demo").innerHTML = text;
-	}
-	</script> -->
-
+	 </div>
+<form class="form-signin" method="POST"> {% csrf_token %}
+	<input type="hidden" name="OTPval" value="{{OTP}}">
+	<input type="hidden" name="MailVal" value="{{mail}}">
+	<h1 class="h3 mb-3 font-weight-normal">Verify OTP</h1>
+  <label for="otp" class="sr-only">Enter OTP</label>
+  <input type="number" id="OTP" name="OTP" class="form-control" placeholder="OTP" required autofocus>
+  <div class="container-login100-form-btn text-center">
+	<a href="#">Refresh the page to recieve OTP Again</a>
+</div>
+  <div class="checkbox mb-3">
+    {% for message in messages %}
+      <div class="alert alert-danger" role="alert">
+        <strong> {{message}} </strong>
+      </div>
+    {%endfor%}
+  </div>
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Verify</button>
+  <a href="calender/">go direct</a>
+  <p class="mt-5 mb-3 text-muted">&copy; AR Systems - Kalam Labs</p>
+</form>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/TweenLite.min.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/EasePack.min.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/demo.js"></script>
 </body>
 </html>

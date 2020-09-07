@@ -8,12 +8,17 @@ import random
 import razorpay
 from django.contrib import messages
 
+
 client = razorpay.Client(auth=("rzp_test_JvDA7T1fvpIDXj", "4MIuwamLHLmUjrILyXFyiq3U"))
 # Create your views here.
 global OTP
 def Home(request):
     return render(request, 'PayApp/arscience.html')
+def direct1(request):
+    return render(request, 'PayApp/verify.html')
 
+def direct2(request):
+    return render(request, 'PayApp/calender.html')
 
 def Trial(request):                                           # view for free trial
     if request.method == "POST":
@@ -25,22 +30,22 @@ def Trial(request):                                           # view for free tr
         school = request.POST.get('school', '')
         # gender = request.POST.get('gender', '')
         course = Course.objects.get(name= 'Free Trial')
-        try:
+        try:                                                        
             std = Student.objects.get(email= mail, phone=phnum)
             try:
                 us = User.objects.get(username=mail)
             except User.DoesNotExist:
                 us = User(username=mail, email=mail)
                 us.set_password(phnum)
-                us.save()
+                us.save()                                           #creating session
         except Student.DoesNotExist:
             std = Student(name=name,email=mail,phone=phnum,school=school,courseapp=course)
             us = User(username=mail, email=mail)                     # Session Management
             us.set_password(phnum)
             us.save()
-        std.active_key = random.randint(100000, 999999)         # generating OTP
+        std.active_key = random.randint(100000, 999999)         # generating Activation Key
         keya = std.active_key    
-        std.save()          # creating student
+        std.save()                                               # creating student
         # sending email
         send_mail('Your OTP is {}'.format(keya),message="", from_email='p.abhijeetp94@gmail.com', recipient_list= [mail], fail_silently= False)
         val = authenticate(username = mail, password = phnum)
@@ -71,8 +76,9 @@ def Verify(request):
                 return redirect("PayApp:Calender")
             else:
                 print("Some Error")
-                msg = messages.info(request, message='Invalid OTP Try Again!!')
-        return render(request, 'PayApp/verify.html', msg)
+                messages.info(request, message='Invalid OTP Try Again!!')
+                return redirect('PayApp:Verify')
+        return render(request, 'PayApp/verify.html')
     else:
         return redirect('PayApp:Trial')
 
@@ -250,5 +256,8 @@ def reOTPtrial(request):
     mail = us.email
     std = Student.objects.get(email=mail)
     std.active_key = random.randint(100000,999999)
-    send_mail('OTP Validation',html_message='Your OTP for {} course is <b>{}</b>'.format(course, keya), from_email='p.abhijeetp94@gmail.com', recipient_list= [mail], fail_silently= False)
+    send_mail('OTP Validation','Your OTP for {} course is <b>{}</b>'.format(course, keya), from_email='p.abhijeetp94@gmail.com', recipient_list= [mail], fail_silently= False)
     return redirect('PayApp:Verify')
+
+def gcalendar(request):
+    return render(request, 'PayApp/index.html')
