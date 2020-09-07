@@ -197,7 +197,7 @@ def payment_status(request):
     mail = user.email
     std = Student.objects.get(email=mail)
     logout(request)
-        us.delete()
+    us.delete()
     course = std.courseapp.name
     if course == 'Conquere':
         courseown = ConquereSub.objects.get(user = std)
