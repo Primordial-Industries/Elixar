@@ -96,6 +96,7 @@ def PaymentLogin(request, course):
         # course = Course.objects.get(name= 'Free Trial')
         try:
             std = Student.objects.get(email= mail,phone = phnum)
+            std.courseapp = crs
             try:
                 us = User.objects.get(username=mail)
             except User.DoesNotExist:
