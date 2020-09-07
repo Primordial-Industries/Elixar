@@ -37,20 +37,20 @@ class Student(models.Model):
 class ConquereSub(models.Model):
     user = models.OneToOneField(Student, on_delete=models.CASCADE, unique=True)
     paid = models.BooleanField(default=False)
-    phone = models.IntegerField(max_length=14)
+    phone = models.IntegerField()
     def __str__(self):
         return self.user.email
 
 class ExplorerSub(models.Model):
     user = models.OneToOneField(Student, on_delete=models.CASCADE, unique=True)
     paid = models.BooleanField(default=False)
-    phone = models.IntegerField(max_length=14)
+    phone = models.IntegerField()
     def __str__(self):
         return self.user.email
 
 class FreeTrialSub(models.Model):
     user = models.OneToOneField(Student, on_delete=models.CASCADE, unique=True)
     # moneypaid = models.BooleanField(default=False)
-    phone = models.IntegerField(max_length=14)
+    phone = models.IntegerField()
     def __str__(self):
         return self.user.email

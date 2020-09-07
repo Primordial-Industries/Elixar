@@ -6,6 +6,8 @@ from .models import Student, FreeTrialSub, ConquereSub, Course, ExplorerSub
 from django.core.mail import send_mail
 import random
 import razorpay
+from django.contrib import messages
+
 client = razorpay.Client(auth=("rzp_test_JvDA7T1fvpIDXj", "4MIuwamLHLmUjrILyXFyiq3U"))
 # Create your views here.
 global OTP
@@ -47,6 +49,7 @@ def Verify(request):
     emai = mail.email
     stda = Student.objects.get(email = mail)
     phone = stda.phone
+    msg = {}
     if request.method == "POST":
         iOTP = request.POST.get('OTP', '')
         print(stda.active_key)
@@ -61,7 +64,8 @@ def Verify(request):
             return redirect("PayApp:Calender")
         else:
             print("Some Error")
-    return render(request, 'PayApp/verify.html')
+            msg = messages.info(request, message='Invalid OTP Try Again!!')
+    return render(request, 'PayApp/verify.html', msg)
 
 def PaymentLogin(request, course):
     crs = Course.objects.get(name=course)
@@ -70,7 +74,8 @@ def PaymentLogin(request, course):
         phnum = request.POST.get('Phone', '')
         fname = request.POST.get('fname', '') 
         lname = request.POST.get('lname', '')
-        name = fname + lname
+        name = '{} {}'.format(fname,lname)
+        print(name)
         school = request.POST.get('school', '')
         # gender = request.POST.get('gender', '')
         # course = Course.objects.get(name= 'Free Trial')
@@ -99,6 +104,7 @@ def verifyPay(request):
     stda = Student.objects.get(email = mail)
     crs = stda.courseapp.name
     phone = stda.phone
+    msg = {}
     if request.method == "POST":
         iOTP = request.POST.get('OTP', '')
         print(stda.active_key)
@@ -120,7 +126,8 @@ def verifyPay(request):
             return redirect("PayApp:create_order")
         else:
             print("Some Error")
-    return render(request, 'PayApp/verifypay.html')
+            msg = messages.info(request, message='Invalid OTP Try Again!!')
+    return render(request, 'PayApp/verifypay.html', msg)
 
 def Calender(request):
     if request.user.is_authenticated:
