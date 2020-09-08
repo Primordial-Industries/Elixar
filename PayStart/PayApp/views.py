@@ -1,3 +1,17 @@
+from __future__ import print_function
+import datetime
+import pickle
+import os.path
+from googleapiclient.discovery import build
+from google_auth_oauthlib.flow import InstalledAppFlow
+from google.auth.transport.requests import Request
+import os
+from datetime import timedelta
+import datetime
+import pytz
+import httplib2
+from googleapiclient.discovery import build
+from oauth2client.service_account import ServiceAccountCredentials
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
@@ -5,8 +19,10 @@ from django.contrib.auth import authenticate, login, logout
 from .models import Student, FreeTrialSub, ConquereSub, Course, ExplorerSub
 from django.core.mail import send_mail
 import random
+import datetime
 import razorpay
 from django.contrib import messages
+from . import quickstart
 
 
 client = razorpay.Client(auth=("rzp_test_JvDA7T1fvpIDXj", "4MIuwamLHLmUjrILyXFyiq3U"))
@@ -20,6 +36,27 @@ def direct1(request):
 def direct2(request):
     return render(request, 'PayApp/calender.html')
 
+def reOTPpay(request):
+    us = request.user
+    mail = us.email
+    std = Student.objects.get(email=mail)
+    course = std.courseapp.name
+    std.active_key = random.randint(100000,999999)
+    std.save()
+    send_mail('OTP Validation',html_message='Your OTP for {} course is {}'.format(course, keya), from_email='kalam-labs@elixarsystem.com', recipient_list= [mail], fail_silently= False)
+    return redirect('PayApp:verifyPay')
+
+def reOTPtrial(request):
+    us = request.user
+    mail = us.email
+    
+    std = Student.objects.get(email=mail)
+    course = std.courseapp.name
+    std.active_key = random.randint(100000,999999)
+    std.save()
+    send_mail('OTP Validation','Your OTP for {} course is {}'.format(course, std.active_key), from_email='kalam-labs@elixarsystems.com', recipient_list= [mail], fail_silently= False)
+    return redirect('PayApp:Verify')
+
 def Trial(request):                                           # view for free trial
     if request.method == "POST":
         mail = request.POST.get('email', '')
@@ -31,7 +68,7 @@ def Trial(request):                                           # view for free tr
         # gender = request.POST.get('gender', '')
         course = Course.objects.get(name= 'Free Trial')
         try:                                                        
-            std = Student.objects.get(email= mail, phone=phnum)
+            std = Student.objects.get(email= mail)
             try:
                 us = User.objects.get(username=mail)
             except User.DoesNotExist:
@@ -47,7 +84,7 @@ def Trial(request):                                           # view for free tr
         keya = std.active_key    
         std.save()                                               # creating student
         # sending email
-        send_mail('Your OTP is {}'.format(keya),message="", from_email='p.abhijeetp94@gmail.com', recipient_list= [mail], fail_silently= False)
+        send_mail('Your OTP is {}'.format(keya),message="", from_email='kalam-labs@elixarsystems.com', recipient_list= [mail], fail_silently= False)
         val = authenticate(username = mail, password = phnum)
         login(request, val)
 
@@ -59,7 +96,7 @@ def Verify(request):
     if request.user.is_authenticated:
         mail = request.user
         emai = mail.email
-        stda = Student.objects.get(email = mail)
+        stda = Student.objects.get(email = emai)
         phone = stda.phone
         msg = {}
         if request.method == "POST":
@@ -73,7 +110,7 @@ def Verify(request):
                     stdf = FreeTrialSub(user=stda, phone = phone)
                     stdf.save()
                 stda.verif = True
-                return redirect("PayApp:Calender")
+                return redirect("PayApp:meeting")
             else:
                 print("Some Error")
                 messages.info(request, message='Invalid OTP Try Again!!')
@@ -97,6 +134,7 @@ def PaymentLogin(request, course):
         try:
             std = Student.objects.get(email= mail,phone = phnum)
             std.courseapp = crs
+            std.save()
             try:
                 us = User.objects.get(username=mail)
             except User.DoesNotExist:
@@ -111,7 +149,7 @@ def PaymentLogin(request, course):
         std.active_key = random.randint(100000, 999999)
         keya = std.active_key
         std.save()
-        send_mail('Your OTP for {} course is {}'.format(course, keya),message="", from_email='p.abhijeetp94@gmail.com', recipient_list= [mail], fail_silently= False)
+        send_mail('Your OTP for {} course is {}'.format(course, keya),message="", from_email='kalam-labs@elixarsystems.com', recipient_list= [mail], fail_silently= False)
         val = authenticate(username = mail, password = phnum)
         login(request, val)
 
@@ -120,34 +158,37 @@ def PaymentLogin(request, course):
     return render(request, 'PayApp/loginPay.html')
 
 def verifyPay(request):
-    mail = request.user
-    emai = mail.email
-    stda = Student.objects.get(email = mail)
-    crs = stda.courseapp.name
-    phone = stda.phone
-    msg = {}
-    if request.method == "POST":
-        iOTP = request.POST.get('OTP', '')
-        print(stda.active_key)
-        print(iOTP)
-        if int(iOTP) == int(stda.active_key):
-            if crs == 'Conquere':
-                try:
-                    stdc = ConquereSub.objects.get(user=stda)
-                except ConquereSub.DoesNotExist:
-                    stdc = ConquereSub(user=stda, phone = phone)
-                    stdc.save()
-            elif crs == 'Explorer':
-                try:
-                    stde = ExplorerSub.objects.get(user=stda)
-                except ExplorerSub.DoesNotExist:
-                    stde = ExplorerSub(user=stda, phone = phone)
-                    stde.save()
-            stda.verif = True
-            return redirect("PayApp:create_order")
-        else:
-            print("Some Error")
-            msg = messages.info(request, message='Invalid OTP Try Again!!')
+    if request.user.is_authenticated:
+        mail = request.user
+        emai = mail.email
+        stda = Student.objects.get(email = mail)
+        crs = stda.courseapp.name
+        phone = stda.phone
+        msg = {}
+        if request.method == "POST":
+            iOTP = request.POST.get('OTP', '')
+            print(stda.active_key)
+            print(iOTP)
+            if int(iOTP) == int(stda.active_key):
+                if crs == 'Conquere':
+                    try:
+                        stdc = ConquereSub.objects.get(user=stda)
+                    except ConquereSub.DoesNotExist:
+                        stdc = ConquereSub(user=stda, phone = phone)
+                        stdc.save()
+                elif crs == 'Explorer':
+                    try:
+                        stde = ExplorerSub.objects.get(user=stda)
+                    except ExplorerSub.DoesNotExist:
+                        stde = ExplorerSub(user=stda, phone = phone)
+                        stde.save()
+                stda.verif = True
+                stda.save()
+                return redirect("PayApp:create_order")
+            else:
+                print("Some Error")
+                messages.info(request, message='Invalid OTP Try Again!!')
+                return redirect('PayApp:VerifyPay')
     return render(request, 'PayApp/verifypay.html', msg)
 
 def Calender(request):
@@ -157,9 +198,10 @@ def Calender(request):
         std = Student.objects.get(email=mail)
         logout(request)
         us.delete()
-
-        return render(request, 'PayApp/calender.html', context= {'email':mail})
-    return redirect('PayApp:Home')
+        date = datetime.date.today()
+        nextday = date + datetime.timedelta(days = 1)
+        return render(request, 'PayApp/calender.html', context= {'email':mail, 'today':date, 'tomorrow':nextday})
+    return redirect('PayApp:home')
 
 def create_order(request):
     if request.user.is_authenticated:
@@ -212,53 +254,129 @@ def create_order(request):
 
 
 def payment_status(request):
-
-    response = request.POST
-    user = request.user
-    mail = user.email
-    std = Student.objects.get(email=mail)
-    logout(request)
-    user.delete()
-    course = std.courseapp.name
-    if course == 'Conquere':
-        courseown = ConquereSub.objects.get(user = std)
-    elif course == 'Explorer':
-        courseown = ExplorerSub.objects.get(user = std)
-    courseown.paid = True
-    params_dict = {
-        'razorpay_payment_id' : response['razorpay_payment_id'],
-        'razorpay_order_id' : response['razorpay_order_id'],
-        'razorpay_signature' : response['razorpay_signature']
-    }
-
-
-    # VERIFYING SIGNATURE
-    try:
-        status = client.utility.verify_payment_signature(params_dict)
+    if request.user.is_authenticated:
+        response = request.POST
+        user = request.user
+        mail = user.email
+        std = Student.objects.get(email=mail)
+        logout(request)
+        user.delete()
+        course = std.courseapp.name
         if course == 'Conquere':
             courseown = ConquereSub.objects.get(user = std)
         elif course == 'Explorer':
             courseown = ExplorerSub.objects.get(user = std)
         courseown.paid = True
-        return render(request, 'PayApp/order_summary.html', {'status': 'Payment Successful'})
-    except:
-        return render(request, 'PayApp/order_summary.html', {'status': 'Payment Faliure!!!'})
+        params_dict = {
+            'razorpay_payment_id' : response['razorpay_payment_id'],
+            'razorpay_order_id' : response['razorpay_order_id'],
+            'razorpay_signature' : response['razorpay_signature']
+        }
 
-def reOTPpay(request):
-    us = request.user
-    mail = us.email
-    std = Student.objects.get(email=mail)
-    std.active_key = random.randint(100000,999999)
-    send_mail('OTP Validation',html_message='Your OTP for {} course is <b>{}</b>'.format(course, keya), from_email='p.abhijeetp94@gmail.com', recipient_list= [mail], fail_silently= False)
-    return redirect('PayApp:verifyPay')
+        # VERIFYING SIGNATURE
+        try:
+            status = client.utility.verify_payment_signature(params_dict)
+            if course == 'Conquere':
+                courseown = ConquereSub.objects.get(user = std)
+            elif course == 'Explorer':
+                courseown = ExplorerSub.objects.get(user = std)
+            courseown.paid = True
+            courseown.save()
+            return render(request, 'PayApp/order_summary.html', {'status': 'Payment Successful'})
 
-def reOTPtrial(request):
-    us = request.user
-    mail = us.email
-    std = Student.objects.get(email=mail)
-    std.active_key = random.randint(100000,999999)
-    send_mail('OTP Validation','Your OTP for {} course is <b>{}</b>'.format(course, keya), from_email='p.abhijeetp94@gmail.com', recipient_list= [mail], fail_silently= False)
-    return redirect('PayApp:Verify')
+        except:
+            return render(request, 'PayApp/order_summary.html', {'status': 'Payment Faliure!!!'})
+    else:
+        return redirect('PayApp:home')
+
+
 
 def gcalendar(request):
-    return render(request, 'PayApp/index.html')
+    build_service()
+    if request.method == "POST":
+        dt = request.POST.get('date', '')
+        print(dt)
+        print(type(dt))
+        hour = request.POST.get('time', '')
+        print(hour)
+        date = datetime.datetime.strptime(dt, '%m %d, %y')
+        time = datetime.time(hour=int(dt),minute= 00,second= 00)
+        create_event(date, time)
+        send_mail('Invitation', 'Your meeting is confirmed with elixar systems on {} {}'.format(date, time), 'kalam-labs@elixarsystems.com', [mail])
+        return redirect('PayApp:home')
+    else:
+        print("Some error")
+
+    return redirect('PayApp:home')
+
+def meeting(request):
+    build_service()
+    if request.user.is_authenticated:
+        date = datetime.date.today()
+        day2 = date + datetime.timedelta(days = 1)
+        day3 = date + datetime.timedelta(days = 2)
+        day4 = date + datetime.timedelta(days = 3)
+        day5 = date + datetime.timedelta(days = 4)
+        day6 = date + datetime.timedelta(days = 5)
+        day7 = date + datetime.timedelta(days = 6)
+        days = {'today': date, 'day2': day2, 'day3': day3, 'day4': day4, 'day5': day5, 'day6': day6, 'day7': day7}
+        us = request.user
+        mail = us.email
+        std = Student.objects.get(email=mail)
+        logout(request)
+        us.delete()
+        date = datetime.date.today()
+        nextday = date + datetime.timedelta(days = 1)
+        if request.method == "POST":
+            dt = request.POST.get('date', '')
+            print(dt)
+            print(type(dt))
+            hour = request.POST.get('time', '')
+            date = datetime.datetime.strptime(dt, format)
+            time = datetime.time(hour=int(dt),minute= 00,second= 00)
+            create_event(date, time)
+            send_mail('Invitation', 'Your meeting is confirmed with elixar systems on {} {}'.format(date, time), 'kalam-labs@elixarsystems.com', [mail])
+            return redirect('PayApp:home')
+        return render(request, 'PayApp/meeting.html', days)
+    return redirect('PayApp:home')
+
+
+
+
+
+def build_service():
+    service_account_email = 'abhijeet-pandey@quickstart-1599466419791.iam.gserviceaccount.com'         # google credentials service account
+
+    CLIENT_SECRET_FILE = 'PayApp/Calendar/crede.p12'                                                    # google credentials .p12 file load
+
+    SCOPES = 'https://www.googleapis.com/auth/calendar'
+    scopes = [SCOPES]
+    credentials = ServiceAccountCredentials.from_p12_keyfile(
+        service_account_email=service_account_email,
+        filename=CLIENT_SECRET_FILE,                                        # Enter your google credentials here
+        scopes=SCOPES
+    )
+
+    http = credentials.authorize(httplib2.Http())
+
+    service = build('calendar', 'v3', http=http)
+
+    return service
+
+
+def create_event(date, time):
+    service = build_service()
+    start_datetime = datetime.datetime.combine(date=date, time=time)
+    tz = pytz.UTC
+    start_datetime_zone = start_datetime.replace(tzinfo=tz)
+    # start_datetime = datetime.datetime.now(tz=pytz.utc)
+    event = service.events().insert(calendarId='primary', body={
+        'summary': 'Meet',
+        'description': 'Google meetings',
+        'start': {'dateTime': start_datetime_zone.isoformat()},
+        'end': {'dateTime': (start_datetime_zone + timedelta(minutes=60)).isoformat()},
+    }).execute()
+    print(event)
+
+def blog(request):
+    return render(request, 'PayApp/blog.html')

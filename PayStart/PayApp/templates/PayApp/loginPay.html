@@ -48,9 +48,9 @@
   <label for="email" class="sr-only">Email</label><br>
   <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
   <label for="Phone" class="sr-only">Phone</label><br>
-  <input type="Phone" id="Phone" name="Phone" class="form-control" placeholder="Phone" required>
+  <input type="tel" id="Phone" name="Phone" class="form-control" placeholder="Phone" required>
   <label for="school" class="sr-only">Phone</label><br>
-  <input type="school" id="school" name="school" class="form-control" placeholder="School" required>
+  <input type="text" id="school" name="school" class="form-control" placeholder="School" required>
   <div class="checkbox mb-3">
     {% for message in messages %}
       <div class="alert alert-danger" role="alert">
@@ -58,7 +58,7 @@
       </div>
     {%endfor%}
   </div>
-  <!-- <a href="verify/">go direct</a> -->
+  <!-- <a href="verifypay/">go direct</a> -->
   <button class="btn btn-lg btn-primary btn-block" type="submit">Get OTP</button>
   <p class="mt-5 mb-3 text-muted">&copy; AR Systems - Kalam Labs</p>
 </form>
