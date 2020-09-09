@@ -1,0 +1,174 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="SMP, MNNITA">
+    <meta name="generator" content="Jekyll v4.0.1">
+    <title>Free Trial - AR Lab</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/sign-in/">
+<link href="{% static "PayApp/assets/dist/css/bootstrap.css" %}" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <link href="{% static "PayApp/loginTrial.css" %}" rel="stylesheet">
+  </head>
+  <body>
+	<div class="container demo">
+		<div class="content">
+		   <div id="large-header" class="large-header">
+			  <canvas id="demo-canvas"></canvas>
+			  <h1 class="main-title"><span class="thin"></span> </h1>
+		   </div>
+		</div>
+	 </div>
+<form class="form-signin" method="POST"> {% csrf_token %}
+	<h1 class="h3 mb-3 font-weight-normal">Buy Now</h1>
+  <label for="fname" class="sr-only">First Name</label>
+  <input type="text" id="fname" name="fname" class="form-control" placeholder="First Name" required autofocus>
+  <label for="lname" class="sr-only">Last Name</label><br>
+  <input type="text" id="lname" name="lname" class="form-control" placeholder="Last Name" required>
+  <label for="email" class="sr-only">Email</label><br>
+  <input type="email" id="email" name="email" class="form-control" placeholder="Email" required>
+  <label for="Phone" class="sr-only">Phone</label><br>
+  <input type="tel" id="Phone" name="Phone" class="form-control" placeholder="Phone" required>
+  <label for="school" class="sr-only">Phone</label><br>
+  <input type="text" id="school" name="school" class="form-control" placeholder="School" required>
+  <div class="checkbox mb-3">
+    {% for message in messages %}
+      <div class="alert alert-danger" role="alert">
+        <strong> {{message}} </strong>
+      </div>
+    {%endfor%}
+  </div>
+  <!-- <a href="verifypay/">go direct</a> -->
+  <button class="btn btn-lg btn-primary btn-block" type="submit">Get OTP</button>
+  <p class="mt-5 mb-3 text-muted">&copy; AR Systems - Kalam Labs</p>
+</form>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/TweenLite.min.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/EasePack.min.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/demo.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- 
+
+
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+	{% load static %}
+<head>
+	<title>Trial - Kalam Labs</title>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="stylesheet" type="text/css" href="{% static "PayApp/loginTrial.css" %}">
+
+</head>
+<body>
+	
+	<div class="limiter">
+		<div class="container-login100" style="background-image: url('{% static "PayApp/images/bg-01.jpg" %}' );">
+			<div class="wrap-login100 p-l-110 p-r-110 p-t-62 p-b-33">
+				<form class="login100-form validate-form flex-sb flex-w" method="POST">
+					{% csrf_token %}
+					<h3 class="login100-form-title">Register With Us</h3>
+					<div class="p-t-31 p-b-9">
+						<span class="txt1">
+							First name
+						</span>
+					</div>
+					<div class="wrap-input100 validate-input" data-validate = "fname is required">
+						<input class="input100" type="text" name="fname" >
+						<span class="focus-input100"></span>
+					</div>
+					<div class="p-t-13 p-b-9">
+						<span class="txt1">
+							Last name
+						</span>
+					</div>
+					<div class="wrap-input100 validate-input" data-validate = "lname is required">
+						<input class="input100" type="text" name="lname" >
+						<span class="focus-input100"></span>
+					</div>
+					<div class="p-t-13 p-b-9">
+						<span class="txt1">
+							Email-Address
+						</span>
+					</div>
+					<div class="wrap-input100 validate-input" data-validate = "Email is required" aria-required="true">
+						<input class="input100" type="email" name="email" >
+						<span class="focus-input100"></span>
+					</div>
+					<div class="p-t-13 p-b-9">
+						<span class="txt1">
+							Phone Number
+						</span>
+					</div>
+					<div class="wrap-input100 validate-input" data-validate = "Phone is required">
+						<input class="input100" type="number" name="Phone" >
+						<span class="focus-input100"></span>
+					</div>
+					<div class="p-t-13 p-b-9">
+						<span class="txt1">
+							School
+						</span>
+					</div>
+					<div class="wrap-input100 validate-input" data-validate = "school is required">
+						<input class="input100" type="text" name="school" >
+						<span class="focus-input100"></span>
+					</div>
+	
+					<div class="container-login100-form-btn m-t-17">
+						<button  href="../../Verify/" class="login100-form-btn">Verify
+								</button>
+						
+					</div>
+				</form>
+			</div>
+		</div>
+	</div>
+	
+	<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/TweenLite.min.js"></script>
+	<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/EasePack.min.js"></script>
+	<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/demo.js"></script>
+	
+</body>
+</html> -->
