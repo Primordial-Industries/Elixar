@@ -1,35 +1,34 @@
-from __future__ import print_function
-import datetime
-import pickle
-import os.path
-from googleapiclient.discovery import build
-from google_auth_oauthlib.flow import InstalledAppFlow
-from google.auth.transport.requests import Request
-import os
-from datetime import timedelta
-import datetime
-import pytz
-import httplib2
-from googleapiclient.discovery import build
-from oauth2client.service_account import ServiceAccountCredentials
+# from __future__ import print_function
+# import datetime
+# import pickle
+# import os.path
+# from googleapiclient.discovery import build
+# from google_auth_oauthlib.flow import InstalledAppFlow
+# from google.auth.transport.requests import Request
+# import os
+# from datetime import timedelta
+# import datetime
+# import pytz
+# import httplib2
+# from googleapiclient.discovery import build
+# from oauth2client.service_account import ServiceAccountCredentials
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Student, FreeTrialSub, ConquereSub, Course, ExplorerSub
+from .models import Student, FreeTrialSub, ConquereSub, Course, ExplorerSub, TrialMeeting
 from django.core.mail import send_mail
 import random
 import datetime
 import razorpay
 from django.contrib import messages
-from . import quickstart
+# from . import quickstart
 
 
-client = razorpay.Client(auth=("rzp_test_JvDA7T1fvpIDXj", "4MIuwamLHLmUjrILyXFyiq3U"))
+client = razorpay.Client(auth=("rzp_test_JvDA7T1fvpIDXj", "4MIuwamLHLmUjrILyXFyiq3U"))                  # Edit your razorpay credentials
 # Create your views here.
-global OTP
 def Home(request):
-    return render(request, 'PayApp/arscience.html')
+    return render(request, 'PayApp/mainpage.html')
 def direct1(request):
     return render(request, 'PayApp/verify.html')
 
@@ -37,25 +36,28 @@ def direct2(request):
     return render(request, 'PayApp/calender.html')
 
 def reOTPpay(request):
-    us = request.user
-    mail = us.email
-    std = Student.objects.get(email=mail)
-    course = std.courseapp.name
-    std.active_key = random.randint(100000,999999)
-    std.save()
-    send_mail('OTP Validation',html_message='Your OTP for {} course is {}'.format(course, keya), from_email='kalam-labs@elixarsystem.com', recipient_list= [mail], fail_silently= False)
-    return redirect('PayApp:verifyPay')
+    if request.user.is_authenticated:
+        us = request.user
+        mail = us.email
+        std = Student.objects.get(email=mail)
+        course = std.courseapp.name
+        std.active_key = random.randint(100000,999999)
+        std.save()
+        send_mail('OTP Validation',html_message='Your OTP for {} course is {}'.format(course, keya), from_email='kalam-labs@elixarsystem.com', recipient_list= [mail], fail_silently= False)
+        return redirect('PayApp:verifyPay')
+    return redirect('PayApp:home')
 
 def reOTPtrial(request):
-    us = request.user
-    mail = us.email
-    
-    std = Student.objects.get(email=mail)
-    course = std.courseapp.name
-    std.active_key = random.randint(100000,999999)
-    std.save()
-    send_mail('OTP Validation','Your OTP for {} course is {}'.format(course, std.active_key), from_email='kalam-labs@elixarsystems.com', recipient_list= [mail], fail_silently= False)
-    return redirect('PayApp:Verify')
+    if request.user.is_authenticated:
+        us = request.user
+        mail = us.email
+        std = Student.objects.get(email=mail)
+        course = std.courseapp.name
+        std.active_key = random.randint(100000,999999)
+        std.save()
+        send_mail('OTP Validation','Your OTP for {} course is {}'.format(course, std.active_key), from_email='kalam-labs@elixarsystems.com', recipient_list= [mail], fail_silently= False)
+        return redirect('PayApp:Verify')
+    return redirect('PayApp:home')
 
 def Trial(request):                                           # view for free trial
     if request.method == "POST":
@@ -63,7 +65,7 @@ def Trial(request):                                           # view for free tr
         phnum = request.POST.get('Phone', '')
         fname = request.POST.get('fname', '') 
         lname = request.POST.get('lname', '')
-        name = fname + lname
+        name = "{} {}".format(fname, lname)
         school = request.POST.get('school', '')
         # gender = request.POST.get('gender', '')
         course = Course.objects.get(name= 'Free Trial')
@@ -189,7 +191,8 @@ def verifyPay(request):
                 print("Some Error")
                 messages.info(request, message='Invalid OTP Try Again!!')
                 return redirect('PayApp:VerifyPay')
-    return render(request, 'PayApp/verifypay.html', msg)
+            return render(request, 'PayApp/verifypay.html')
+    return redirect('PayApp:home')
 
 def Calender(request):
     if request.user.is_authenticated:
@@ -213,13 +216,6 @@ def create_order(request):
         course = std.courseapp
         crsname = course.name
         context = {}
-        # if request.method == 'POST':
-            # print("INSIDE Create Order!!!")
-            # name = request.POST.get('name')
-            # phone = request.POST.get('phone')
-            # email = request.POST.get('email')
-            # product = request.POST.get('product')
-
         order_amount = 0
         order_amount = course.price
 
@@ -292,25 +288,31 @@ def payment_status(request):
 
 
 def gcalendar(request):
-    build_service()
-    if request.method == "POST":
-        dt = request.POST.get('date', '')
-        print(dt)
-        print(type(dt))
-        hour = request.POST.get('time', '')
-        print(hour)
-        date = datetime.datetime.strptime(dt, '%m %d, %y')
-        time = datetime.time(hour=int(dt),minute= 00,second= 00)
-        create_event(date, time)
-        send_mail('Invitation', 'Your meeting is confirmed with elixar systems on {} {}'.format(date, time), 'kalam-labs@elixarsystems.com', [mail])
-        return redirect('PayApp:home')
-    else:
-        print("Some error")
-
+    # build_service()
+    if request.user.is_authenticated:
+        us = request.user
+        mail = us.email
+        std = Student.objects.get(email=mail)
+        logout(request)
+        us.delete()
+        if request.method == "POST":
+            dt = request.POST.get('date', '')
+            print(dt)
+            print(type(dt))
+            hour = request.POST.get('time', '')
+            print(hour)
+            time = datetime.time(hour=int(hour),minute= 00,second= 00)
+            meeter = TrialMeeting(user = std, meetdate=dt, meettime=time, mailID=mail)
+            meeter.save()
+            send_mail('Invitation', 'Your meeting is confirmed with elixar systems on {} {}'.format(dt, time), 'kalam-labs@elixarsystems.com', [mail])
+            return redirect('PayApp:home')
+        else:
+            print("Some error")
+    print("Some Error")
     return redirect('PayApp:home')
 
 def meeting(request):
-    build_service()
+    # build_service()
     if request.user.is_authenticated:
         date = datetime.date.today()
         day2 = date + datetime.timedelta(days = 1)
@@ -323,20 +325,18 @@ def meeting(request):
         us = request.user
         mail = us.email
         std = Student.objects.get(email=mail)
-        logout(request)
-        us.delete()
-        date = datetime.date.today()
-        nextday = date + datetime.timedelta(days = 1)
         if request.method == "POST":
             dt = request.POST.get('date', '')
             print(dt)
             print(type(dt))
             hour = request.POST.get('time', '')
-            date = datetime.datetime.strptime(dt, format)
-            time = datetime.time(hour=int(dt),minute= 00,second= 00)
-            create_event(date, time)
-            send_mail('Invitation', 'Your meeting is confirmed with elixar systems on {} {}'.format(date, time), 'kalam-labs@elixarsystems.com', [mail])
+            print(hour)
+            time = datetime.time(hour=int(hour),minute= 00,second= 00)
+            meeter = TrialMeeting(user = std, meetdate=dt, meettime=time, mailID=mail)
+            send_mail('Invitation', 'Your meeting is confirmed with elixar systems on {} {}'.format(dt, time), 'kalam-labs@elixarsystems.com', [mail])
             return redirect('PayApp:home')
+        else:
+            print("Some error")
         return render(request, 'PayApp/meeting.html', days)
     return redirect('PayApp:home')
 
@@ -344,39 +344,42 @@ def meeting(request):
 
 
 
-def build_service():
-    service_account_email = 'abhijeet-pandey@quickstart-1599466419791.iam.gserviceaccount.com'         # google credentials service account
+# def build_service():
+#     service_account_email = 'abhijeet-pandey@quickstart-1599466419791.iam.gserviceaccount.com'         # google credentials service account
 
-    CLIENT_SECRET_FILE = 'PayApp/Calendar/crede.p12'                                                    # google credentials .p12 file load
+#     CLIENT_SECRET_FILE = 'PayApp/Calendar/crede.p12'                                                    # google credentials .p12 file load
 
-    SCOPES = 'https://www.googleapis.com/auth/calendar'
-    scopes = [SCOPES]
-    credentials = ServiceAccountCredentials.from_p12_keyfile(
-        service_account_email=service_account_email,
-        filename=CLIENT_SECRET_FILE,                                        # Enter your google credentials here
-        scopes=SCOPES
-    )
+#     SCOPES = 'https://www.googleapis.com/auth/calendar'
+#     scopes = [SCOPES]
+#     credentials = ServiceAccountCredentials.from_p12_keyfile(
+#         service_account_email=service_account_email,
+#         filename=CLIENT_SECRET_FILE,                                        # Enter your google credentials here
+#         scopes=SCOPES
+#     )
 
-    http = credentials.authorize(httplib2.Http())
+#     http = credentials.authorize(httplib2.Http())
 
-    service = build('calendar', 'v3', http=http)
+#     service = build('calendar', 'v3', http=http)
 
-    return service
+#     return service
 
 
-def create_event(date, time):
-    service = build_service()
-    start_datetime = datetime.datetime.combine(date=date, time=time)
-    tz = pytz.UTC
-    start_datetime_zone = start_datetime.replace(tzinfo=tz)
-    # start_datetime = datetime.datetime.now(tz=pytz.utc)
-    event = service.events().insert(calendarId='primary', body={
-        'summary': 'Meet',
-        'description': 'Google meetings',
-        'start': {'dateTime': start_datetime_zone.isoformat()},
-        'end': {'dateTime': (start_datetime_zone + timedelta(minutes=60)).isoformat()},
-    }).execute()
-    print(event)
+# def create_event(date, time):
+#     service = build_service()
+#     start_datetime = datetime.datetime.combine(date=date, time=time)
+#     tz = pytz.UTC
+#     start_datetime_zone = start_datetime.replace(tzinfo=tz)
+#     # start_datetime = datetime.datetime.now(tz=pytz.utc)
+#     event = service.events().insert(calendarId='primary', body={
+#         'summary': 'Meet',
+#         'description': 'Google meetings',
+#         'start': {'dateTime': start_datetime_zone.isoformat()},
+#         'end': {'dateTime': (start_datetime_zone + timedelta(minutes=60)).isoformat()},
+#     }).execute()
+#     print(event)
 
-def blog(request):
-    return render(request, 'PayApp/blog.html')
+# def blog(request):
+#     return render(request, 'PayApp/blog.html')
+
+# def mainp(request):
+#     return render(request, 'PayApp/mainpage.html')

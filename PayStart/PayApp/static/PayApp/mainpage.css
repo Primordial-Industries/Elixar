@@ -1,0 +1,287 @@
+
+@import url('https://fonts.googleapis.com/css2?family=Nunito:ital,wght@1,300&family=Oswald&display=swap');
+
+
+
+
+.bggirl{
+    background-image: url('./images/bggirl.png');
+    position: absolute;
+    /* position: absolute; */
+    background-repeat: no-repeat;
+    background-size: cover;
+width: 1304px;
+height: 1064px;
+left: 131px;
+top: 197px;
+align-self: center;
+
+}
+
+.bookbox{
+    position: absolute;
+width: 1440px;
+height: 197px;
+left: -4px;
+top: 0px;
+
+}
+
+.logok{
+    position: absolute;
+width: 157px;
+height: 197px;
+left: 27px;
+top: 50px;
+/* background: url('./assets/R1.png'); */
+}
+
+.internatacc{
+    position: absolute;
+width: 538px;
+height: 106px;
+left: 298px;
+top: 55px;
+
+font-family: Nunito;
+font-style: normal;
+font-weight: 600;
+font-size: 28px;
+line-height: 38px;
+text-align: center;
+
+color: #39352F;
+}
+
+.freebook{
+    position: absolute;
+width: 426px;
+height: 116px;
+left: 994px;
+top: 45px;
+
+background: #39352F;
+box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+border-radius: 10px;
+}
+.freebookcont{
+    position: absolute;
+width: 262px;
+height: 84px;
+left: 1106px;
+top: 55px;
+
+font-family: Nunito;
+font-style: normal;
+font-weight: 500;
+font-size: 40px;
+line-height: 50px;
+text-align: center;
+
+color: #FFFFFF;
+}
+
+.compo2{
+    position: absolute;
+width: 573px;
+height: 467px;
+left: 61px;
+top: 148px;
+
+
+/* transform: rotate(-90deg); */
+}
+
+.compo1{
+    position: absolute;
+width: 573px;
+height: 467px;
+left: 373px;
+top: 130px;
+}
+
+.pract{
+    position: absolute;
+width: 444px;
+height: 227px;
+left: 761px;
+top: 161px;
+
+font-family: Nunito;
+font-style: normal;
+font-weight: 200;
+font-size: 80px;
+line-height: 79px;
+text-align: center;
+
+color: #FFFFFF;
+}
+
+.achieve1{
+    position: absolute;
+width: 487px;
+height: 41px;
+left: 50px;
+top: 662px;
+
+font-family: Oswald;
+font-style: italic;
+font-weight: 300;
+font-size: 30px;
+line-height: 41px;
+/* identical to box height */
+
+
+color: #000000;
+}
+.achieve2 {
+    /* ‘Top 10 International Innovation’ - Government of Finland ( Finland has best Educational System) */
+position: absolute;
+width: 437px;
+height: 123px;
+left: 178px;
+top: 790px;
+
+font-family: Oswald;
+font-style: italic;
+font-weight: 300;
+font-size: 30px;
+line-height: 41px;
+
+color: #000000;
+}
+
+.achieve3{
+    /* ‘Under 10 Undergraduate Innovation’ - Government of India - Department of Science Technology IIGP2.0 */
+
+
+position: absolute;
+width: 437px;
+height: 123px;
+left: 41px;
+top: 951px;
+
+font-family: Oswald;
+font-style: italic;
+font-weight: 300;
+font-size: 30px;
+line-height: 41px;
+
+color: #000000;
+}
+
+.hod{
+    position: absolute;
+    width: 530px;
+    height: 534px;
+    left: 164px;
+    top: 1275px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: url(./images/anmathur.png);
+}
+.hod-header-body{
+    position: absolute;
+    width: 738px;
+    height: 102px;
+    left: 697px;
+    top: 1275px;
+    background: #F7FEFF;
+    box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+    border-radius: 0px 10px 10px 0px;
+}
+.hod-header{
+/* Anuradha Mathur HOD - Kalam Labs */
+
+position: absolute;
+width: 804px;
+height: 114px;
+left: 668px;
+top: 1297px;
+
+font-family: Nunito;
+font-style: normal;
+font-weight: 500;
+font-size: 43px;
+line-height: 63px;
+text-align: center;
+
+color: #000000;
+}
+
+.hod-content{
+    /* Mrs Anuradha Madhur is one of the most celebrated Physisicts in India. She has been core authors of Physics NCERT Textbooks of Class 11th and 12th. She has previously taught at Harvard University, USA and ex- HOD Physics NCERT. At Kalam Labs, she guides students across Globe to Study Science Experimentally. */
+
+
+    position: absolute;
+    width: 703px;
+    height: 346px;
+    left: 744px;
+    top: 1404px;
+    font-family: Nunito;
+    font-style: normal;
+    font-weight: 200;
+    font-size: 33px;
+    line-height: 47px;
+    color: #000000;
+}
+
+.ampbg{
+    position: absolute;
+    width: 1276px;
+    height: 677px;
+    left: 162px;
+    top: 1780px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    background-image: linear-gradient(to right,rgba(255, 255, 255, 0), rgba(255,255,255,1)), url(./images/ampere.png);
+    border-radius: 10px;
+    
+}
+
+
+.marks50{
+    /* 50% More Marks */
+
+
+    position: absolute;
+    width: 517px;
+    height: 510px;
+    left: 1006px;
+    top: 1942px;
+    font-family: Nunito;
+    font-style: normal;
+    font-weight: 600;
+    font-size: 97px;
+    line-height: 118px;
+    color: #0030AC;
+}
+.marks50-content{
+    /* In a Scientific Studey Conducted by NCERT, the Students who taughbt with AR, achieved more marks than who studied just through Books */
+
+
+    position: absolute;
+    width: 649px;
+    height: 233px;
+    left: 786px;
+    top: 2157px;
+    font-family: Nunito;
+    font-style: normal;
+    font-weight: 300;
+    font-size: 35px;
+    line-height: 48px;
+    text-align: center;
+    color: #000000;
+}
+
+.trustbox{
+    position: absolute;
+width: 1439px;
+height: 138px;
+left: 0px;
+top: 3282px;
+
+background: #F7FEFF;
+box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
+border-radius: 0px 10px 10px 0px;
+}

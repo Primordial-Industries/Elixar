@@ -54,3 +54,11 @@ class FreeTrialSub(models.Model):
     phone = models.IntegerField()
     def __str__(self):
         return self.user.email
+
+class TrialMeeting(models.Model):
+    user = models.OneToOneField(Student, on_delete = models.CASCADE)
+    meetdate = models.CharField(max_length=20)
+    meettime = models.TimeField()
+    mailID = models.EmailField()
+    def __str__(self):
+        return self.user.name
