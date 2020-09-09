@@ -191,7 +191,7 @@ def verifyPay(request):
                 print("Some Error")
                 messages.info(request, message='Invalid OTP Try Again!!')
                 return redirect('PayApp:VerifyPay')
-            return render(request, 'PayApp/verifypay.html')
+        return render(request, 'PayApp/verifypay.html')
     return redirect('PayApp:home')
 
 def Calender(request):

@@ -175,7 +175,7 @@ color: #000000;
     width: 530px;
     height: 534px;
     left: 164px;
-    top: 1275px;
+    top: 1375px;
     background-repeat: no-repeat;
     background-size: contain;
     background-image: url(./images/anmathur.png);
@@ -185,7 +185,7 @@ color: #000000;
     width: 738px;
     height: 102px;
     left: 697px;
-    top: 1275px;
+    top: 1375px;
     background: #F7FEFF;
     box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
     border-radius: 0px 10px 10px 0px;
@@ -197,7 +197,7 @@ position: absolute;
 width: 804px;
 height: 114px;
 left: 668px;
-top: 1297px;
+top: 1400px;
 
 font-family: Nunito;
 font-style: normal;
@@ -217,7 +217,7 @@ color: #000000;
     width: 703px;
     height: 346px;
     left: 744px;
-    top: 1404px;
+    top: 1504px;
     font-family: Nunito;
     font-style: normal;
     font-weight: 200;
@@ -231,7 +231,7 @@ color: #000000;
     width: 1276px;
     height: 677px;
     left: 162px;
-    top: 1780px;
+    top: 1950px;
     background-repeat: no-repeat;
     background-size: contain;
     background-image: linear-gradient(to right,rgba(255, 255, 255, 0), rgba(255,255,255,1)), url(./images/ampere.png);
@@ -248,7 +248,7 @@ color: #000000;
     width: 517px;
     height: 510px;
     left: 1006px;
-    top: 1942px;
+    top: 2142px;
     font-family: Nunito;
     font-style: normal;
     font-weight: 600;
@@ -264,7 +264,7 @@ color: #000000;
     width: 649px;
     height: 233px;
     left: 786px;
-    top: 2157px;
+    top: 2257px;
     font-family: Nunito;
     font-style: normal;
     font-weight: 300;
@@ -284,4 +284,41 @@ top: 3282px;
 background: #F7FEFF;
 box-shadow: 0px 4px 20px rgba(0, 0, 0, 0.25);
 border-radius: 0px 10px 10px 0px;
+}
+.knowus{
+    position: absolute;
+    width: 1276px;
+    height: 677px;
+    left: 162px;
+    top: 3300px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    /* background-image: linear-gradient(to right,rgba(255, 255, 255, 0), rgba(255,255,255,1)), url(./images/ampere.png); */
+    border-radius: 10px;
+    
+}
+
+.kalam{
+    position: absolute;
+    width: 1276px;
+    height: 200px;
+    left: 162px;
+    top: 4080px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    /* background-image: linear-gradient(to right,rgba(255, 255, 255, 0), rgba(255,255,255,1)), url(./images/ampere.png); */
+    border-radius: 10px;
+    
+}
+
+.carouselMe{
+    position: absolute;
+    width: 1276px;
+    height: 677px;
+    left: 162px;
+    top: 2580px;
+    background-repeat: no-repeat;
+    background-size: contain;
+    /* background-image: linear-gradient(to right,rgba(255, 255, 255, 0), rgba(255,255,255,1)), url(./images/ampere.png); */
+    border-radius: 10px;
 }
