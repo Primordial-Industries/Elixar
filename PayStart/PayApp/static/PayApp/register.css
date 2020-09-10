@@ -16,7 +16,7 @@ h1 {
 }
 
 .form {
-  width: 530px;
+  width: inherit;
   padding: 64px 15px 24px;
   margin: 0 auto;
 }
