@@ -1,0 +1,243 @@
+<!doctype html>
+{% load static %}
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="SMP, MNNITA">
+    <meta name="generator" content="Jekyll v4.0.1">
+    <title>Free Trial - AR Lab</title>
+
+    <link rel="canonical" href="https://getbootstrap.com/docs/4.5/examples/sign-in/">
+<link href="{% static "PayApp/assets/dist/css/bootstrap.css" %}" rel="stylesheet">
+
+    <style>
+      .bd-placeholder-img {
+        font-size: 1.125rem;
+        text-anchor: middle;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+      }
+
+      @media (min-width: 768px) {
+        .bd-placeholder-img-lg {
+          font-size: 3.5rem;
+        }
+      }
+    </style>
+    <link href="{% static "PayApp/loginTrial.css" %}" rel="stylesheet">
+    <link href="{% static "PayApp/calendar.css" %}" rel="stylesheet">
+  </head>
+  <body>
+	<div class="container demo">
+		<div class="content">
+		   <div id="large-header" class="large-header">
+			  <canvas id="demo-canvas"></canvas>
+			  <h1 class="main-title"><span class="thin"></span> </h1>
+		   </div>
+		</div>
+   </div>
+   
+<form class="form1" method="POST" action = '../gcalendar'>    {% csrf_token %}
+  <div class="container">
+  <div class="form-row align-items-center">
+    <h5>Choose Date and Time for Meeting</h5>
+    <div class="row justify-content-center pb-2">
+      <div class="col-12 pt-2">
+        <p class="mb-2 pb-2">Date</p>
+      </div>
+      <div class="col-12 pb-2">
+        <input class="checkbox-tools" type="radio" name="tools" id="tool-1" value="{{today}}" checked>
+        <label class="for-checkbox-tools" for="tool-1">
+          <i class='uil uil-line-alt'></i>
+          {{today}}
+        </label><!--
+        --><input value="{{day2}}" class="checkbox-tools" type="radio" name="tools" id="tool-2">
+        <label class="for-checkbox-tools" for="tool-2">
+          <i class='uil uil-vector-square'></i>
+          {{day2}}
+        </label><!--
+        --><input value="{{day3}}"  class="checkbox-tools" type="radio" name="tools" id="tool-3">
+        <label class="for-checkbox-tools" for="tool-3">
+          <i class='uil uil-ruler'></i>
+          {{day3}}
+        </label><!--
+        --><input value="{{day4}}"  class="checkbox-tools" type="radio" name="tools" id="tool-4">
+        <label class="for-checkbox-tools" for="tool-4">
+          <i class='uil uil-crop-alt'></i>
+          {{day4}}
+        </label><!--
+        --><input value="{{day5}}"  class="checkbox-tools" type="radio" name="tools" id="tool-5">
+        <label class="for-checkbox-tools" for="tool-5">
+          <i class='uil uil-brush-alt'></i>
+          {{day5}}
+        </label><!--
+        --><input value="{{day6}}"  class="checkbox-tools" type="radio" name="tools" id="tool-6">
+        <label class="for-checkbox-tools" for="tool-6">
+          <i class='uil uil-image-resize-landscape'></i>
+          {{day6}}
+        </label>
+        <input value="{{day6}}" class="checkbox-tools" type="radio" name="tools" id="tool-7">
+        <label class="for-checkbox-tools" for="tool-6">
+          <i class='uil uil-image-resize-landscape'></i>
+          {{day7}}
+        </label>
+      </div>
+    <!-- <div class="col-auto my-1 offset-sm-3">
+      
+      <select class="custom-select mr-sm-2" id="date" name="date">
+        <option selected>Choose a date</option>
+        <option value="{{today}}">{{today}}</option>
+        <option value="{{day2}}">{{day2}}</option>
+        <option value="{{day3}}">{{day3}}</option>
+        <option value="{{day4}}">{{day4}}</option>
+        <option value="{{day5}}">{{day5}}</option>
+        <option value="{{day6}}">{{day6}}</option>
+        <option value="{{day7}}">{{day7}}</option>
+      </select>
+    </div> -->
+
+    <div class="col-12 pt-1">
+      <p class="mb-2 pb-2">Time</p>
+    </div>
+    <div class="col-sm-10 pb-2">
+      <input class="checkbox-budget" type="radio" name="budget" id="budget-1" value="9" checked>
+      <label class="for-checkbox-budget" for="budget-1">
+        <span data-hover="9:00 AM">9:00 AM</span>
+      </label><!--
+      --><input value="10" class="checkbox-budget" type="radio" name="budget" id="budget-2">
+      <label class="for-checkbox-budget" for="budget-2">							
+        <span data-hover="10:00 AM">10:00 AM</span>
+      </label><!--
+      --><input value="11" class="checkbox-budget" type="radio" name="budget" id="budget-3">
+      <label class="for-checkbox-budget" for="budget-3">							
+        <span data-hover="11:00 AM">11:00 AM</span>
+      </label><!--
+      --><input value="12" class="checkbox-budget" type="radio" name="budget" id="budget-4">
+      <label class="for-checkbox-budget" for="budget-4">							
+        <span data-hover="12:00 PM">12:00 PM</span>
+      </label><!--
+      --><input value="13" class="checkbox-budget" type="radio" name="budget" id="budget-5">
+      <label class="for-checkbox-budget" for="budget-5">							
+        <span data-hover="1:00 PM">1:00 PM</span>
+      </label><!--
+      --><input value="14" class="checkbox-budget" type="radio" name="budget" id="budget-6">
+      <label class="for-checkbox-budget" for="budget-6">							
+        <span data-hover="2:00 PM">2:00 PM</span>
+      </label>
+      <input value="15" class="checkbox-budget" type="radio" name="budget" id="budget-7">
+      <label class="for-checkbox-budget" for="budget-7">							
+        <span data-hover="3:00 PM">3:00 PM</span>
+      </label>
+      <input value="16" class="checkbox-budget" type="radio" name="budget" id="budget-8">
+      <label class="for-checkbox-budget" for="budget-8">							
+        <span data-hover="4:00 PM">4:00 PM</span>
+      </label>
+    </div>
+  </div>
+    <!-- <div class="col-auto my-1 offset-sm-3">
+      <select class="custom-select mr-sm-2 " id="time" name="time">
+        <option selected>Choose a time</option>
+        <option value="9">9:00 AM</option>
+        <option value="10">10:00 AM</option>
+        <option value="11">11:00 AM</option>
+        <option value="12">12:00 PM</option>
+        <option value="13">1:00 PM</option>
+        <option value="14">2:00 PM</option>
+        <option value="15">3:00 PM</option>
+        <option value="16">4:00 PM</option>
+        <option value="17">5:00 PM</option> -->
+      <!-- </select>
+      </div> -->
+    
+  </div>
+  </div>
+  <button type="submit" class="mt-2 btn btn-outline-dark" style="color: aliceblue;">
+    Confirm
+  </button>
+</form>
+<script src="{% static "PayApp/js/jquery/jquery-2.2.4.min.js" %}"></script>
+ <!-- Popper js -->
+ <script src="{% static "PayApp/js/bootstrap/popper.min.js" %}"></script>
+ <!-- Bootstrap js -->
+ <script src="{% static "PayApp/js/bootstrap/bootstrap.min.js" %}"></script>
+ <!-- All Plugins js -->
+ <script src="{% static "PayApp/js/plugins/plugins.js" %}"></script>
+ <!-- Active js -->
+ <script src="{% static "PayApp/js/active.js" %}"></script>
+ <!-- <script>
+   var event = {
+  'summary': 'Google I/O 2015',
+  'location': '800 Howard St., San Francisco, CA 94103',
+  'description': 'A chance to hear more about Google\'s developer products.',
+  'start': {
+    'dateTime': '2015-05-28T09:00:00-07:00',
+    'timeZone': 'America/Los_Angeles'
+  },
+  'end': {
+    'dateTime': '2015-05-28T17:00:00-07:00',
+    'timeZone': 'America/Los_Angeles'
+  },
+  // 'recurrence': [
+  //   'RRULE:FREQ=DAILY;COUNT=2'
+  // ],
+  // 'attendees': [
+  //   {'email': 'lpage@example.com'},
+  //   {'email': 'sbrin@example.com'}
+  // ],
+  'reminders': {
+    'useDefault': false,
+    'overrides': [
+      {'method': 'email', 'minutes': 24 * 60},
+      {'method': 'popup', 'minutes': 10}
+    ]
+  }
+};
+
+var request = gapi.client.calendar.events.insert({
+  'calendarId': 'primary',
+  'resource': event
+});
+
+request.execute(function(event) {
+  appendPre('Event created: ' + event.htmlLink);
+});
+ </script>
+   <script>
+    var solution = event.conferenceData.conferenceSolution;
+
+var content = document.getElementById("content");
+var text = document.createTextNode("Join " + solution.name);
+var icon = document.createElement("img");
+icon.src = solution.iconUri;
+
+content.appendChild(icon);
+content.appendChild(text);
+
+var eventPatch = {
+  conferenceData: {
+    createRequest: {requestId: "7qxalsvy0e"}
+  }
+};
+
+gapi.client.calendar.events.patch({
+  calendarId: "primary",
+  eventId: "7cbh8rpc10lrc0ckih9tafss99",
+  resource: eventPatch,
+  sendNotifications: true,
+  conferenceDataVersion: 1
+}).execute(function(event) {
+  console.log("Conference created for event: %s", event.htmlLink);
+});
+
+   </script> -->
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/TweenLite.min.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/EasePack.min.js"></script>
+<script src="https://s3-us-west-2.amazonaws.com/s.cdpn.io/499416/demo.js"></script>
+</body>
+</html>
+
+
