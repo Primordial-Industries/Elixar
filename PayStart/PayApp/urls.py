@@ -14,6 +14,7 @@ urlpatterns = [
     path('confirm_order', views.create_order, name = 'create_order'),
     path('gcalendar', views.gcalendar, name = 'gcalendar'),
     path('meeting', views.meeting, name = 'meeting'),
+    path('datet/', views.datet, name = 'datet'),
     # path('blog/', views.blog, name = 'blog'),
     # path('mainp/', views.mainp, name = 'mainp'),
     path('payment_status', views.payment_status, name = 'payment_status'),
@@ -23,3 +24,4 @@ urlpatterns = [
     path('FreeTrial/Calender/', views.direct2, name = 'direct2'),
 
 ]
+

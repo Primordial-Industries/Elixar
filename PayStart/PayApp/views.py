@@ -296,10 +296,10 @@ def gcalendar(request):
         logout(request)
         us.delete()
         if request.method == "POST":
-            dt = request.POST.get('date', '')
+            dt = request.POST.get('tools', '')
             print(dt)
             print(type(dt))
-            hour = request.POST.get('time', '')
+            hour = request.POST.get('budget', '')
             print(hour)
             time = datetime.time(hour=int(hour),minute= 00,second= 00)
             meeter = TrialMeeting(user = std, meetdate=dt, meettime=time, mailID=mail)
@@ -326,10 +326,10 @@ def meeting(request):
         mail = us.email
         std = Student.objects.get(email=mail)
         if request.method == "POST":
-            dt = request.POST.get('date', '')
+            dt = request.POST.get('tools', '')
             print(dt)
             print(type(dt))
-            hour = request.POST.get('time', '')
+            hour = request.POST.get('budget', '')
             print(hour)
             time = datetime.time(hour=int(hour),minute= 00,second= 00)
             meeter = TrialMeeting(user = std, meetdate=dt, meettime=time, mailID=mail)
@@ -340,7 +340,8 @@ def meeting(request):
         return render(request, 'PayApp/meeting.html', days)
     return redirect('PayApp:home')
 
-
+def datet(request):
+    return render(request, "PayApp/meeting.html")
 
 
 
