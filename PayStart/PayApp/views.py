@@ -92,7 +92,7 @@ def Trial(request):                                           # view for free tr
 
         datasend = {'email': mail, 'name':name, 'phone':phnum}
         return redirect('PayApp:Verify')
-    return render(request, 'PayApp/loginTrial.html')
+    return render(request, 'PayApp/registertrial.html')
 
 def Verify(request):
     if request.user.is_authenticated:
@@ -157,7 +157,7 @@ def PaymentLogin(request, course):
 
         datasend = {'email': mail, 'name':name, 'phone':phnum}
         return redirect('PayApp:verifyPay')
-    return render(request, 'PayApp/loginPay.html')
+    return render(request, 'PayApp/register.html')
 
 def verifyPay(request):
     if request.user.is_authenticated:

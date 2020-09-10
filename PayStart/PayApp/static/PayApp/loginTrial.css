@@ -25,18 +25,19 @@ body {
   background-color: rgba(0,0,0, 0.4); /* Black w/opacity/see-through */
   color: white;
   font-weight: bold;
-  border: 3px solid #f1f1f1;
+  border: 1px solid #f1f1f1;
   position: absolute;
+  border-spacing: 50px;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 2;
-  width: 80%;
-  padding: 20px;
+  width: 150%;
+  padding: 50px;
   text-align: center;
   width: 100%;
-  max-width: 330px;
-  padding: 15px;
+  max-width: 530px;
+  padding: 50px;
   margin: auto;
 }
 .form-signin .checkbox {
