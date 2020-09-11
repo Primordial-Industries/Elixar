@@ -1,22 +1,9 @@
-# from __future__ import print_function
-# import datetime
-# import pickle
-# import os.path
-# from googleapiclient.discovery import build
-# from google_auth_oauthlib.flow import InstalledAppFlow
-# from google.auth.transport.requests import Request
-# import os
-# from datetime import timedelta
-# import datetime
-# import pytz
-# import httplib2
-# from googleapiclient.discovery import build
-# from oauth2client.service_account import ServiceAccountCredentials
+
 from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login, logout
-from .models import Student, FreeTrialSub, ConquereSub, Course, ExplorerSub, TrialMeeting
+from .models import Student, FreeTrialSub, ConquereSub, Course, ExplorerSub, TrialMeeting, UserProfile, Enroll
 from django.core.mail import send_mail
 import random
 import datetime
@@ -39,7 +26,7 @@ def reOTPpay(request):
     if request.user.is_authenticated:
         us = request.user
         mail = us.email
-        std = Student.objects.get(email=mail)
+        std = Enroll.objects.get(email=mail)
         course = std.courseapp.name
         std.active_key = random.randint(100000,999999)
         std.save()
@@ -51,7 +38,7 @@ def reOTPtrial(request):
     if request.user.is_authenticated:
         us = request.user
         mail = us.email
-        std = Student.objects.get(email=mail)
+        std = Enroll.objects.get(email=mail)
         course = std.courseapp.name
         std.active_key = random.randint(100000,999999)
         std.save()
@@ -69,19 +56,23 @@ def Trial(request):                                           # view for free tr
         school = request.POST.get('school', '')
         # gender = request.POST.get('gender', '')
         course = Course.objects.get(name= 'Free Trial')
-        try:                                                        
-            std = Student.objects.get(email= mail)
-            try:
-                us = User.objects.get(username=mail)
-            except User.DoesNotExist:
-                us = User(username=mail, email=mail)
-                us.set_password(phnum)
-                us.save()                                           #creating session
-        except Student.DoesNotExist:
-            std = Student(name=name,email=mail,phone=phnum,school=school,courseapp=course)
-            us = User(username=mail, email=mail)                     # Session Management
+        try:
+            us = User.objects.get(username=mail)
+        except User.DoesNotExist:
+            us = User(username=mail, email=mail)
             us.set_password(phnum)
             us.save()
+        try:
+            usp = UserProfile.objects.get(auth_user = us)
+        except UserProfile.DoesNotExist:
+            usp = UserProfile(auth_user=us, phone=phnum, college=school)
+            usp.save()
+        
+        try:                                                        
+            std = Enroll.objects.get(email= mail)
+                                                      #creating session
+        except Enroll.DoesNotExist:
+            std = Enroll(name=name,email=mail,phone=phnum,school=school,courseapp=course)
         std.active_key = random.randint(100000, 999999)         # generating Activation Key
         keya = std.active_key    
         std.save()                                               # creating student
@@ -98,7 +89,7 @@ def Verify(request):
     if request.user.is_authenticated:
         mail = request.user
         emai = mail.email
-        stda = Student.objects.get(email = emai)
+        stda = Enroll.objects.get(email = emai)
         phone = stda.phone
         msg = {}
         if request.method == "POST":
@@ -134,20 +125,22 @@ def PaymentLogin(request, course):
         # gender = request.POST.get('gender', '')
         # course = Course.objects.get(name= 'Free Trial')
         try:
-            std = Student.objects.get(email= mail,phone = phnum)
-            std.courseapp = crs
-            std.save()
-            try:
-                us = User.objects.get(username=mail)
-            except User.DoesNotExist:
-                us = User(username=mail, email=mail)
-                us.set_password(phnum)
-                us.save()
-        except Student.DoesNotExist:
-            std = Student(name=name,email=mail,phone=phnum,school=school,courseapp=crs)
+            us = User.objects.get(username=mail)
+        except User.DoesNotExist:
             us = User(username=mail, email=mail)
             us.set_password(phnum)
             us.save()
+        try:
+            usp = UserProfile.objects.get(auth_user = us)
+        except UserProfile.DoesNotExist:
+            usp = UserProfile(auth_user=us, phone=phnum, college=school)
+            usp.save()
+        
+        try:                                                        
+            std = Enroll.objects.get(email= mail)
+                                                      #creating session
+        except Enroll.DoesNotExist:
+            std = Enroll(name=name,email=mail,phone=phnum,school=school,courseapp=crs)
         std.active_key = random.randint(100000, 999999)
         keya = std.active_key
         std.save()
@@ -163,7 +156,7 @@ def verifyPay(request):
     if request.user.is_authenticated:
         mail = request.user
         emai = mail.email
-        stda = Student.objects.get(email = mail)
+        stda = Enroll.objects.get(email = mail)
         crs = stda.courseapp.name
         phone = stda.phone
         msg = {}
@@ -198,9 +191,8 @@ def Calender(request):
     if request.user.is_authenticated:
         us = request.user
         mail = us.email
-        std = Student.objects.get(email=mail)
+        std = Enroll.objects.get(email=mail)
         logout(request)
-        us.delete()
         date = datetime.date.today()
         nextday = date + datetime.timedelta(days = 1)
         return render(request, 'PayApp/calender.html', context= {'email':mail, 'today':date, 'tomorrow':nextday})
@@ -210,7 +202,7 @@ def create_order(request):
     if request.user.is_authenticated:
         us = request.user
         mail = us.email
-        std = Student.objects.get(email=mail)
+        std = Enroll.objects.get(email=mail)
         name = std.name
         phone = std.phone
         course = std.courseapp
@@ -254,9 +246,8 @@ def payment_status(request):
         response = request.POST
         user = request.user
         mail = user.email
-        std = Student.objects.get(email=mail)
+        std = Enroll.objects.get(email=mail)
         logout(request)
-        user.delete()
         course = std.courseapp.name
         if course == 'Conquere':
             courseown = ConquereSub.objects.get(user = std)
@@ -292,9 +283,8 @@ def gcalendar(request):
     if request.user.is_authenticated:
         us = request.user
         mail = us.email
-        std = Student.objects.get(email=mail)
+        std = Enroll.objects.get(email=mail)
         logout(request)
-        us.delete()
         if request.method == "POST":
             dt = request.POST.get('tools', '')
             print(dt)
@@ -324,7 +314,7 @@ def meeting(request):
         days = {'today': date, 'day2': day2, 'day3': day3, 'day4': day4, 'day5': day5, 'day6': day6, 'day7': day7}
         us = request.user
         mail = us.email
-        std = Student.objects.get(email=mail)
+        std = Enroll.objects.get(email=mail)
         if request.method == "POST":
             dt = request.POST.get('tools', '')
             print(dt)
